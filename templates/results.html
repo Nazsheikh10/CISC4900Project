@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<body>
+    <h1>Search Results</h1>
+    {% if not books %}
+        <p>No books found matching your query.</p>
+    {% else %}
+        <ul>
+            {% for book in books %}
+                <li>
+                    <strong>Title:</strong> {{ book['volumeInfo'].title }}<br>
+                    <strong>Author(s):</strong> {{ ', '.join(book['volumeInfo'].authors) if book['volumeInfo'].authors else 'Unknown Author' }}<br>
+                    <strong>Description:</strong> {{ book['volumeInfo'].description }}<br>
+                    <img src="{{ book['volumeInfo'].imageLinks.thumbnail if book['volumeInfo'].imageLinks else '' }}" alt="Book Cover"><br>
+
+                    <!-- Button to add the book to the user's reading list -->
+                    <form action="{{ url_for('books.add_book') }}" method="POST">
+                        <input type="hidden" name="api_id" value="{{ book['id'] }}">
+                        <input type="hidden" name="title" value="{{ book['volumeInfo'].title }}">
+                        <input type="hidden" name="author" value="{{ ', '.join(book['volumeInfo'].authors) if book['volumeInfo'].authors else 'Unknown Author' }}">
+                        <input type="hidden" name="description" value="{{ book['volumeInfo'].description }}">
+                        <input type="hidden" name="cover_page" value="{{ book['volumeInfo'].imageLinks.thumbnail if book['volumeInfo'].imageLinks else '' }}">
+
+                        <!-- Dropdown for read status-->
+                        <lable for="read_status">Reading Status:</lable>
+                        <select name="read_status" id="read_status">
+                            <option value="to-read">To Read</option>
+                            <option value="reading">Reading</option>
+                            <option value="completed">Completed</option>
+                        </select>
+
+                        <!-- Submit button-->
+                        <button type="submit">Add to My List</button>
+                    </form>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>

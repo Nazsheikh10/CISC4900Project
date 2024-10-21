@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ book.title }} - Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Book Details Section -->
+        <div class="book-details">
+            <h1>{{ book.title }}</h1>
+            <p><strong>Author(s):</strong> {{ book.author }}</p>
+            <p><strong>Description:</strong> {{ book.description }}</p>
+            <img src="{{ book.cover_page }}" alt="Cover image of {{ book.title }}" class="book-cover">
+        </div>
+
+        <!-- Rating Section -->
+        <div class="book-rating">
+            <h2>Rating</h2>
+            {% if user_review %}
+                <p>Your Rating: {{ user_review.rating }} / 5</p>
+                <p>Your Review: {{ user_review.review_text }}</p>
+                <a href="{{ url_for('books.edit_review', book_id=book.id) }}">Edit your review</a>
+            {% else %}
+                <form method="POST" action="{{ url_for('books.add_review', book_id=book.id) }}">
+                    <label for="rating">Rate the Book (1-5):</label>
+                    <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+                    <label for="review_text">Your Review:</label>
+                    <textarea id="review_text" name="review_text" placeholder="Write a brief review..." required></textarea>
+
+                    <button type="submit">Submit Review</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <!-- Other User Reviews Section -->
+        <div class="user-reviews">
+            <h2>Reviews</h2>
+            {% if reviews %}
+                <ul>
+                    {% for review in reviews %}
+                        <li>
+                            <p><strong>{{ review.user.username }}:</strong></p>
+                            <p>Rating: {{ review.rating }} / 5</p>
+                            <p>{{ review.review_text }}</p>
+                            <p><em>Reviewed on: {{ review.added_at.strftime('%Y-%m-%d') }}</em></p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No reviews yet. Be the first to review this book!</p>
+            {% endif %}
+        </div>
+        
+        <!-- Back Button -->
+        <a href="{{ url_for('books.user_books') }}">Back to My Books</a>
+    </div>
+</body>
+</html>

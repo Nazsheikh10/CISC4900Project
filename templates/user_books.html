@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Books</title>
+</head>
+<body>
+    <h1>My Saved Books</h1>
+    {% if not books %}
+        <p>You haven't added any books yet!</p>
+    {% else %}
+        <ul>
+            {% for book in books %}
+                <li>
+                    <strong>Title:</strong> {{ book.title }}<br>
+                    <strong>Author(s):</strong> {{ book.author }}<br>
+                    <strong>Description:</strong> {{ book.description }}<br>
+                    <strong>Read Status:</strong> {{ book.read_status }}<br>
+
+                    <!-- Form to update the read status -->
+                    <form action="{{ url_for('books.update_read_status', book_id=book.book_id) }}" method="POST">
+                        <select name="read_status">
+                            <option value="to-read" {% if book.read_status == 'to-read' %}selected{% endif %}>To Read</option>
+                            <option value="reading" {% if book.read_status == 'reading' %}selected{% endif %}>Reading</option>
+                            <option value="completed" {% if book.read_status == 'completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                        <button type="submit">Update Status</button>
+                    </form>
+                    
+                    <a href="{{ url_for('books.view_book', book_id=book.book_id) }}">View Details</a>
+
+                    <a href="{{ url_for('books.review_book', book_id=book.book_id) }}" class="btn btn-primary">Review</a>
+
+                    <!-- Button to remove the book from user's list -->
+                    <form action="{{ url_for('books.remove_book', book_id=book.book_id) }}" method="POST">
+                        <button type="submit">Remove from My List</button>
+                    </form>
+                    
+                    <img src="{{ book.cover_page }}" alt="Book Cover">
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
