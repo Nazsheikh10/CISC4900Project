@@ -1,12 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-</head>
-<body>
-    <h1>Welcome to Dashboard</h1>
-    <a href="{{url_for('auth.logout')}}">Logout</a>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-8">
+
+    <!-- Search Form -->
+    <div class="relative w-full md:w-1/2 mx-auto mb-8">
+        <form action="{{ url_for('books.search') }}" method="GET" class="flex">
+            <input 
+                id="search-bar" 
+                type="text" 
+                name="query" 
+                placeholder="Search books..." 
+                class="w-full px-4 py-2 rounded-lg bg-antique-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-pastel-blue-dark shadow-sm"
+                required
+            >
+            <button type="submit" class="ml-2 bg-golden-yellow text-brown-800 px-4 py-2 rounded-lg shadow-md hover:bg-amber transition duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.293 4.707l4.387 4.386a1 1 0 01-1.414 1.414l-4.386-4.387A6 6 0 012 8z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- Dashboard Main Content -->
+    <section class="relative">
+        <div class="absolute inset-0 bg-black opacity-50"></div> <!-- Semi-transparent overlay -->
+        <div class="relative container mx-auto bg-antique-white dashboard-overlay text-center text-antique-white py-20">
+            <h1 class="text-5xl font-bold mb-4">Welcome to Your Dashboard!</h1>
+            <p class="text-lg mb-6">Track your books, view recommendations, and more.</p>
+        </div>
+    </section>
+
+    <!-- Spacer Section to add extra space between the Hero and Cards -->
+    <section class="my-32 h-16"></section>
+
+    <div class="stats my-8 p-6 rounded-lg bg-parchment-white text-dark-brown shadow-md">
+        <h2 class="text-xl font-bold mb-4">Your Reading Progress</h2>
+        <p><strong>Books Completed:</strong> {{ books_completed }}</p>
+        <p><strong>Currently Reading:</strong> {{ currently_reading }}</p>
+        <p><strong>Total Reviews:</strong> {{ total_reviews }}</p>
+    </div>    
+
+    <!-- Logout Link -->
+    <div class="logout-container mt-20">
+        <a href="{{ url_for('auth.logout') }}" class="button logout">
+            Logout
+        </a>
+    </div>    
+</div>
+
+<!-- JavaScript Code -->
+<script>
+    // Show loading spinner when the search form is submitted
+    const searchForm = document.querySelector('form');
+    searchForm.addEventListener('submit', () => {
+        const loadingSpinner = document.getElementById('loading-spinner');
+        loadingSpinner.classList.remove('hidden');
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!localStorage.getItem("reminder_prompt_shown")) {
+            let wantsReminder = confirm("Would you like to receive reminder emails to help you stay on track with your reading?");
+            fetch("/auth/update_reminder_preference", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ wants_reminder: wantsReminder })
+            });
+            localStorage.setItem("reminder_prompt_shown", "true");
+        }
+    });
+</script>
+
+{% endblock %}

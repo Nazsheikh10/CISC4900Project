@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-8 px-4 md:px-16">
+    <!-- Profile Container -->
+    <div class="bg-antique-white p-8 rounded-lg shadow-md max-w-lg mx-auto">
+        <!-- Page Title -->
+        <h2 class="text-3xl font-bold mb-6 text-center text-brown">My Profile</h2>
+
+        <!-- User Profile Form -->
+        <form method="POST" action="{{ url_for('auth.profile') }}">
+            {{ form.hidden_tag() }}
+
+            <!-- Username Field -->
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-dark-brown">Username:</label>
+                {{ form.username(class="w-full px-4 py-2 rounded bg-parchment-white text-dark-brown border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pastel-blue-dark") }}
+                {% for error in form.username.errors %}
+                    <p class="text-red-500 text-xs">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Email Field -->
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-dark-brown">Email:</label>
+                {{ form.email(class="w-full px-4 py-2 rounded bg-parchment-white text-dark-brown border border-gray-300 focus:outline-none focus:ring-2 focus:ring-pastel-blue-dark") }}
+                {% for error in form.email.errors %}
+                    <p class="text-red-500 text-xs">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <!-- Reminder Checkbox -->
+            <div class="mb-6">
+                <label for="wants_reminder" class="inline-flex items-center text-dark-brown">
+                    <input type="checkbox" id="wants_reminder" name="wants_reminder" {% if form.wants_reminder.data %}checked{% endif %}
+                        class="mr-2">
+                    Receive Reminder Emails
+                </label>
+            </div>
+
+            <!-- Reset Password Button -->
+            <div class="text-center mb-4">
+                <a href="{{ url_for('auth.reset_request') }}"
+                    class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-300">
+                    Reset Password
+                </a>
+            </div>
+
+            <!-- Update Profile Button -->
+            <div class="text-center">
+                {{ form.submit(class="bg-golden-yellow text-brown-800 px-6 py-3 rounded-md shadow-md hover:bg-amber transition-transform duration-300") }}
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

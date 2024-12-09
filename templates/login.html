@@ -1,20 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-</head>
-<body>
-    <h1>Login Page</h1>
+{% extends "layout.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-parchment-white text-brown-800 p-8 rounded-lg shadow-lg border border-leather-brown">
+    <h1 class="text-3xl font-bold mb-6 text-center text-leather-brown">Login</h1>
 
     <form method="POST" action="">
         {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.password }}
-        {{ form.submit }}
+
+        <!-- Username Field -->
+        <div class="mb-4">
+            <label for="username" class="block text-sm font-medium text-burnt-sienna mb-2">
+                Username:
+            </label>
+            {{ form.username(class_="w-full bg-parchment-white border-dark-brown rounded-md p-2 focus:ring-golden-yellow focus:border-golden-yellow") }}
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-burnt-sienna mb-2">
+                Password:
+            </label>
+            {{ form.password(class_="w-full bg-parchment-white border-dark-brown rounded-md p-2 focus:ring-golden-yellow focus:border-golden-yellow") }}
+        </div>
+
+        <!-- Forgot Password Link -->
+        <div class="text-right mb-4">
+            <a href="{{ url_for('auth.reset_request') }}" class="text-leather-red text-sm hover:underline">
+                Forgot Password?
+            </a>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="w-full bg-golden-yellow text-brown-800 py-2 px-4 rounded-md hover:bg-amber focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-yellow shadow-md">
+                Login
+            </button>
+        </div>
     </form>
-    
-    <a href="{{url_for('auth.register')}}">Don't have an account? Sign up</a>
-</body>
-</html>
+
+    <div class="text-center mt-4">
+        <hr class="my-6 border-gray-300">
+        <a href="{{ url_for('auth.register') }}" class="text-leather-red hover:underline">Don't have an account? Sign up</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,553 @@
+/* Custom CSS file: static/css/custom.css */
+
+/* Bookshelf Background */
+.bookshelf-background {
+  background-image: url('/static/images/bookshelf_background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+  background-attachment: fixed; /* Optional, adds parallax effect */
+}
+
+/* Paper-like Background for Cards */
+.paper-background {
+  background: #F5DEB3; /* Light paper tone */
+  background-image: url('/static/images/paper_texture.jpg');
+  background-size: cover;
+  background-blend-mode: multiply;
+}
+
+.vintage-texture {
+  background-image: url('/static/images/vintage_paper_texture.jpg'); 
+  background-size: cover;
+  background-blend-mode: multiply;
+}
+
+html, body {
+  height: 100%; /* Ensure the body and HTML elements fill the viewport height */
+}
+
+body {
+  display: flex; /* Apply flexbox to the body */
+  flex-direction: column; /* Ensure children stack vertically */
+  margin: 0; /* Remove default margin */
+}
+
+/* Custom Animations */
+@keyframes fadeInUp {
+0% {
+    opacity: 0;
+    transform: translateY(20px);
+}
+100% {
+    opacity: 1;
+    transform: translateY(0);
+}
+}
+
+.animate-fadeInUp {
+animation: fadeInUp 1s ease-in-out forwards;
+}
+
+/* Adjustments for Text Readability */
+.text-readable {
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for text readability */
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
+}
+
+.quote-text {
+  font-family: 'Dancing Script', cursive;
+  font-style: italic;
+}
+
+.bg-leather-brown {
+  background-color: #8B5A2B;
+}
+
+.bg-antique-white {
+  background-color: #FAF3E0;
+}
+
+.text-sepia {
+  color: #704214;
+}
+
+.bg-golden-yellow {
+  background-color: #FFC107;
+}
+
+.bg-parchment {
+  background-color: #F5E6CA;
+}
+
+.text-brown-800 {
+  color: #5C4033; 
+}
+
+.bg-sepia {
+  background-color: #704214; /* Rich sepia tone */
+}
+
+.hover:bg-golden-light:hover {
+  background-color: #FFD700; /* Brighter golden for hover effect */
+  transform: scale(1.05);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Card Hover Animation */
+.card-zoom:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover:text-golden-yellow:hover {
+  color: #CC9C06; /* Slightly darker golden yellow for more subtle hover */
+  transition: color 0.3s ease-in-out;
+}
+
+/* Custom Colors for Book-Themed Website */
+
+/* Background Colors */
+.bg-parchment-white {
+  background-color: #F5F3E7; /* Light parchment color */
+} 
+
+/* Border Colors */
+.border-leather-brown {
+  border-color: #8B4513; /* Leather Brown */
+}
+.border-dark-brown {
+  border-color: #5C4033; /* Dark Brown */
+}
+
+/* Text Colors */
+.text-burnt-sienna {
+  color: #E97451; /* Burnt Sienna */
+}
+.text-leather-brown {
+  color: #8B4513; /* Leather Brown */
+}
+.text-dark-brown {
+  color: #5C4033; /* Dark Brown */
+}
+.text-leather-red {
+  color: #A0522D; /* Leather Red */
+}
+
+/* Button Colors */
+.bg-golden-yellow {
+  background-color: #F0A500; /* Golden Yellow */
+}
+.bg-amber:hover {
+  background-color: #FFB300; /* Amber on hover */
+}
+
+/* Shadow Colors */
+.shadow-leather-brown {
+  box-shadow: 0 4px 8px 0 rgba(139, 69, 19, 0.3); /* Shadow with Leather Brown tone */
+}
+
+body.dark {
+  --bg-color: #1E293B; /* Dark background */
+  --text-color: #f0f0f0; /* Light text */
+}
+
+.dark .card {
+  background: #374151; /* Card background in dark mode */
+  color: var(--text-color);
+  border: 1px solid #4B5563; /* Border to help it stand out */
+}
+
+.dark .hero {
+  background-color: #8B5E3C; /* Darker hero background for contrast */
+  color: #FFF8DC; /* Light parchment-like color for text */
+}
+
+.dark .button {
+  background: #F0A500; /* Golden yellow */
+  color: #1E293B; /* Dark text for contrast */
+}
+
+/* Shared Card Styles */
+.feature-card {
+  border-radius: 8px; /* Rounded corners */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Light Mode Specific */
+.feature-card-light {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #faf4e4; /* Light parchment color */
+}
+
+.feature-card-light:hover {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+}
+
+/* Dark Mode Specific */
+.dark-mode .feature-card {
+  background-color: #2a2a2a; /* Slightly lighter for contrast */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* Soft white border */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.dark-mode .feature-card:hover {
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+}
+
+/* Default Toggle Button */
+.toggle-dark-mode {
+  border-radius: 4px;
+  padding: 6px 12px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.toggle-dark-mode:hover {
+  border: 2px solid #FFD700; /* Golden yellow glow */
+  box-shadow: 0 0 10px #FFD700;
+}
+
+/* Shared Button Styles */
+.start-button {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Light Mode */
+.start-button-light {
+  background-color: #FFC107; /* Golden yellow */
+  color: #5a3c00;
+}
+
+.start-button-light:hover {
+  background-color: #FFB300; /* Slightly darker on hover */
+  transform: translateY(-2px); /* Lift effect */
+}
+
+/* Dark Mode */
+.dark-mode .start-button {
+  background-color: #FFB300;
+  color: #1a1a1a;
+}
+
+.dark-mode .start-button:hover {
+  background-color: #FFA000;
+  transform: translateY(-2px);
+}
+
+.dashboard-overlay {
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 2rem auto;
+  margin-bottom: 2rem;
+}
+
+.dark .dashboard-overlay {
+  background: rgba(0, 0, 0, 0.6); /* Dark overlay for dark mode */
+  color: #FAF3E0;
+}
+
+/* Logout Button Styling */
+.logout {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #DC3545; /* Bootstrap Red */
+  color: #FFF;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logout:hover {
+  background-color: #C82333; /* Darker red on hover */
+  transform: translateY(-2px);
+}
+
+/* Logout Button Container */
+.logout-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  min-height: 100px; /* Adjust spacing */
+  margin-bottom: 40px; /* Space above footer */
+}
+
+/* Footer */
+footer {
+  margin-top: 50px; /* Ensure footer stays visually separated */
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #5C4033; /* Matches your theme */
+  color: #FAF3E0; /* Light text */
+}
+
+.stats {
+  background: #FAF3E0; /* Parchment */
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 0 auto 20px auto; /* Center alignment */
+  text-align: left;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.stats h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #c8724a; /* Dark brown */
+}
+
+.stats p {
+  margin: 0.25rem 0;
+  font-size: 1rem;
+}
+
+.dark .stats {
+  background: #374151; /* Dark mode */
+  color: #FAF3E0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.text-brown {
+  color: #c8724a;
+}
+
+/* Dropdown and Button Styling */
+.dropdown {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.filter-button, .update-button, .review-button, .remove-button {
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-button:hover, .update-button:hover, .review-button:hover, .remove-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.header h2 {
+  color: #c8724a;
+  font-size: 2rem;
+  font-family: 'Merriweather', serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.filter .dropdown {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+
+.filter-button {
+  background-color: #007bff; /* Blue */
+  color: white;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+.filter-button:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+.filter-label {
+  color: #c8724a;
+  font-size: 1rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.books-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.book-card {
+  background-color: #FAF3E0; /* Light parchment */
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dark .book-card {
+  background-color: #2D3748; /* Dark gray */
+  color: #E2E8F0; /* Light text */
+}
+
+.dark .dropdown {
+  background-color: #4A5568; /* Slightly lighter gray */
+  color: #E2E8F0; /* Light text */
+}
+
+.dark .filter-button, .dark .update-button, .dark .review-button, .dark .remove-button {
+  background-color: #1A202C;
+  color: #E2E8F0;
+}
+
+.dark .filter-button:hover, .dark .update-button:hover, .dark .review-button:hover, .dark .remove-button:hover {
+  background-color: #374151; /* Slightly lighter hover */
+}
+
+/* ========================================
+   Book Details Page Styles
+   ======================================== */
+
+   .book-details-container {
+    background-color: #FAF3E0; /* Light parchment */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Text Styling */
+.book-details-container h1, .book-details-container h2 {
+    font-family: 'Merriweather', serif;
+    font-weight: bold;
+    color: #5C4033; /* Dark brown */
+}
+
+.book-details-container h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.book-details-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.book-details-container p {
+    line-height: 1.6;
+    color: #5C4033; /* Dark brown */
+}
+
+/* Form Elements */
+.dropdown, .textarea {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown:focus, .textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resizing */
+}
+
+/* Buttons */
+.submit-button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Reviews */
+.user-reviews ul {
+    list-style: none;
+    padding: 0;
+}
+
+.user-reviews li {
+    padding: 1rem;
+    border-radius: 8px;
+    background-color: #F9F9F9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.dark .user-reviews li {
+    background-color: #2D3748; /* Dark mode */
+    color: #E2E8F0;
+}
+
+/* Profile Page Styles */
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #FAF3E0; /* Matches parchment background */
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark .profile-container {
+  background-color: #2D3748; /* Dark mode background */
+  color: #E2E8F0; /* Light text */
+}
+
+.profile-container input,
+.profile-container input[type="checkbox"],
+.profile-container button {
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.dark .profile-container input {
+  background-color: #374151; /* Dark input background */
+  color: #E2E8F0; /* Light text */
+  border-color: #4A5568;
+}
+
+.profile-container button {
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.profile-container button:hover {
+  transform: translateY(-2px);
+}

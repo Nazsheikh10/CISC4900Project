@@ -1,15 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Search</title>
-</head>
-<body>
-    <h1>Search for Books</h1>
-    <form action="{{ url_for('books.search') }}" method="POST">
-        <input type="text" name="query" placeholder="Enter a book title or author" required>
-        <button type="submit">Search</button>
+{% extends "layout.html" %}
+
+{% block title %}Search for Books{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-8 px-4 md:px-16">
+    <!-- Page Title -->
+    <h1 class="text-2xl font-bold mb-6 text-center">Search for Books</h1>
+    
+    <!-- Search Form -->
+    <form action="{{ url_for('books.search') }}" method="POST" class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+        <input 
+            type="text" 
+            name="query" 
+            placeholder="Enter a book title or author" 
+            required
+            class="w-full md:w-1/2 px-4 py-2 rounded-lg bg-antique-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-pastel-blue-dark shadow-sm"
+        >
+        <button type="submit" class="bg-golden-yellow text-brown-800 px-6 py-2 rounded-lg shadow-md hover:bg-amber transition duration-300">
+            Search
+        </button>
     </form>
-</body>
-</html>
+    
+    <!-- Search Results -->
+    <div class="mt-12">
+        {% if books %}
+            <h2 class="text-3xl font-semibold mb-8 text-center text-dark-brown">Search Results:</h2>
+            <ul class="space-y-8">
+                {% for book in books %}
+                <li class="p-6 border border-dark-brown rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-parchment-white">
+                    <h3 class="text-2xl font-bold mb-2">{{ book.volumeInfo.title }}</h3>
+                    <p class="text-md font-medium text-dark-brown">Author(s): {{ ', '.join(book.volumeInfo.authors) if book.volumeInfo.authors else 'Unknown Author' }}</p>
+                    <p class="text-gray-800 mt-4">{{ book.volumeInfo.description[:200] }}{% if book.volumeInfo.description and len(book.volumeInfo.description) > 200 %}...{% endif %}</p>
+                    {% if book.volumeInfo.imageLinks and book.volumeInfo.imageLinks.thumbnail %}
+                    <img src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="Book Cover" class="w-32 h-auto mt-4">
+                    {% endif %}
+                    
+                    <!-- Add Book to Reading List Button -->
+                    <form action="{{ url_for('books.add_book') }}" method="POST" class="mt-4">
+                        <input type="hidden" name="api_id" value="{{ book.id }}">
+                        <input type="hidden" name="title" value="{{ book.volumeInfo.title }}">
+                        <input type="hidden" name="author" value="{{ ', '.join(book.volumeInfo.authors) if book.volumeInfo.authors else 'Unknown Author' }}">
+                        <input type="hidden" name="description" value="{{ book.volumeInfo.description }}">
+                        <input type="hidden" name="cover_page" value="{{ book.volumeInfo.imageLinks.thumbnail if book.volumeInfo.imageLinks else '' }}">
+                        <select name="read_status" class="mt-2 px-4 py-2 rounded-md border border-dark-brown">
+                            <option value="to-read">To Read</option>
+                            <option value="reading">Reading</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        <button type="submit" class="mt-2 bg-golden-yellow text-brown-800 px-4 py-2 rounded-lg shadow-md hover:bg-amber transition duration-300">
+                            Add to My List
+                        </button>
+                    </form>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-center text-dark-brown mt-16">No results found. Please try a different search.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

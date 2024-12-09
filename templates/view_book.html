@@ -1,62 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ book.title }} - Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <!-- Book Details Section -->
-        <div class="book-details">
-            <h1>{{ book.title }}</h1>
-            <p><strong>Author(s):</strong> {{ book.author }}</p>
-            <p><strong>Description:</strong> {{ book.description }}</p>
-            <img src="{{ book.cover_page }}" alt="Cover image of {{ book.title }}" class="book-cover">
+{% extends "layout.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-8 px-4 md:px-16">
+    <div class="bg-antique-white dark:bg-gray-700 p-8 rounded-lg shadow-md">
+        <!-- Book Cover -->
+        <div class="flex justify-center mb-8">
+            {% if book.cover_page %}
+                <img src="{{ book.cover_page }}" alt="{{ book.title }}" class="w-48 h-auto rounded-lg shadow-sm">
+            {% else %}
+                <div class="w-48 h-64 bg-gray-200 flex items-center justify-center rounded-lg">
+                    <span class="text-dark-brown text-center">No Cover Available</span>
+                </div>
+            {% endif %}
         </div>
 
-        <!-- Rating Section -->
-        <div class="book-rating">
-            <h2>Rating</h2>
+        <!-- Book Information -->
+        <div class="text-center">
+            <h2 class="text-3xl font-bold mb-4">{{ book.title }}</h2>
+            <p class="text-md mb-2"><strong>Author:</strong> {{ book.author }}</p>
+            <p class="text-md mb-4">{{ book.description }}</p>
+            
+            <!-- Average Rating -->
+            {% if average_rating %}
+                <p class="text-lg text-yellow-500 mb-6">
+                    Average Rating: {{ average_rating|round(1) }} / 5
+                </p>
+            {% else %}
+                <p class="text-lg text-gray-600 mb-6">No ratings available yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- User's Review Section -->
+        <section class="reviews mb-8">
+            <h3 class="text-2xl font-bold mb-4">Your Review</h3>
             {% if user_review %}
-                <p>Your Rating: {{ user_review.rating }} / 5</p>
-                <p>Your Review: {{ user_review.review_text }}</p>
-                <a href="{{ url_for('books.edit_review', book_id=book.id) }}">Edit your review</a>
+                <!-- Display user's review -->
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <p class="text-md font-semibold mb-2">You rated: {{ user_review.rating }} / 5</p>
+                    <p class="text-sm">{{ user_review.review_text }}</p>
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('books.review_book', book_id=book.book_id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                            Edit Your Review
+                        </a>
+                    </div>
+                </div>
             {% else %}
-                <form method="POST" action="{{ url_for('books.add_review', book_id=book.id) }}">
-                    <label for="rating">Rate the Book (1-5):</label>
-                    <input type="number" id="rating" name="rating" min="1" max="5" required>
-
-                    <label for="review_text">Your Review:</label>
-                    <textarea id="review_text" name="review_text" placeholder="Write a brief review..." required></textarea>
-
-                    <button type="submit">Submit Review</button>
-                </form>
+                <!-- Show a message and button to add a review -->
+                <p class="text-lg mb-4">You haven't reviewed this book yet.</p>
+                <div class="text-center">
+                    <a href="{{ url_for('books.review_book', book_id=book.book_id) }}" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-300">
+                        Add Your Review
+                    </a>
+                </div>
             {% endif %}
-        </div>
+        </section>
 
-        <!-- Other User Reviews Section -->
-        <div class="user-reviews">
-            <h2>Reviews</h2>
-            {% if reviews %}
-                <ul>
-                    {% for review in reviews %}
-                        <li>
-                            <p><strong>{{ review.user.username }}:</strong></p>
-                            <p>Rating: {{ review.rating }} / 5</p>
-                            <p>{{ review.review_text }}</p>
-                            <p><em>Reviewed on: {{ review.added_at.strftime('%Y-%m-%d') }}</em></p>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No reviews yet. Be the first to review this book!</p>
-            {% endif %}
-        </div>
-        
         <!-- Back Button -->
-        <a href="{{ url_for('books.user_books') }}">Back to My Books</a>
+        <div class="text-center">
+            <a href="{{ url_for('books.my_books') }}" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-300">Back to My Books</a>
+        </div>
     </div>
-</body>
-</html>
+</main>
+{% endblock %}

@@ -1,46 +1,72 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Results</title>
-</head>
-<body>
-    <h1>Search Results</h1>
+{% extends "layout.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-8 px-4 md:px-16">
+    <!-- Page Title -->
+    <h1 class="text-3xl font-bold mb-8 text-center text-dark-brown">Search Results</h1>
+    
+    <!-- Search Results -->
     {% if not books %}
-        <p>No books found matching your query.</p>
+        <p class="text-center text-dark-brown">No books found matching your query. Please try a different search term.</p>
     {% else %}
-        <ul>
+        <ul class="space-y-12">
             {% for book in books %}
-                <li>
-                    <strong>Title:</strong> {{ book['volumeInfo'].title }}<br>
-                    <strong>Author(s):</strong> {{ ', '.join(book['volumeInfo'].authors) if book['volumeInfo'].authors else 'Unknown Author' }}<br>
-                    <strong>Description:</strong> {{ book['volumeInfo'].description }}<br>
-                    <img src="{{ book['volumeInfo'].imageLinks.thumbnail if book['volumeInfo'].imageLinks else '' }}" alt="Book Cover"><br>
-
-                    <!-- Button to add the book to the user's reading list -->
-                    <form action="{{ url_for('books.add_book') }}" method="POST">
-                        <input type="hidden" name="api_id" value="{{ book['id'] }}">
-                        <input type="hidden" name="title" value="{{ book['volumeInfo'].title }}">
-                        <input type="hidden" name="author" value="{{ ', '.join(book['volumeInfo'].authors) if book['volumeInfo'].authors else 'Unknown Author' }}">
-                        <input type="hidden" name="description" value="{{ book['volumeInfo'].description }}">
-                        <input type="hidden" name="cover_page" value="{{ book['volumeInfo'].imageLinks.thumbnail if book['volumeInfo'].imageLinks else '' }}">
-
-                        <!-- Dropdown for read status-->
-                        <lable for="read_status">Reading Status:</lable>
-                        <select name="read_status" id="read_status">
-                            <option value="to-read">To Read</option>
-                            <option value="reading">Reading</option>
-                            <option value="completed">Completed</option>
-                        </select>
-
-                        <!-- Submit button-->
-                        <button type="submit">Add to My List</button>
-                    </form>
+                <li class="p-8 border border-dark-brown rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-parchment-white">
+                    <div class="flex flex-col md:flex-row md:items-start gap-6">
+                        <!-- Book Cover -->
+                        <div class="md:w-1/4 mb-4 md:mb-0">
+                            {% if book['volumeInfo'].imageLinks and book['volumeInfo'].imageLinks.thumbnail %}
+                                <img src="{{ book['volumeInfo'].imageLinks.thumbnail }}" alt="Book Cover" class="w-full h-auto rounded-lg shadow-sm">
+                            {% else %}
+                                <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded-lg">
+                                    <span class="text-dark-brown text-center">No Cover Available</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Book Details -->
+                        <div class="md:w-3/4">
+                            <h3 class="text-3xl font-bold mb-2 text-dark-brown">{{ book['volumeInfo'].title }}</h3>
+                            <p class="text-md font-medium text-dark-brown mb-4">
+                                Author(s): {{ ', '.join(book['volumeInfo'].authors) if book['volumeInfo'].authors else 'Unknown Author' }}
+                            </p>
+                            <p class="text-gray-800 mb-4">
+                                {% if book['volumeInfo'].description %}
+                                    {{ book['volumeInfo'].description[:200] }}{% if book['volumeInfo'].description|length > 200 %}...{% endif %}
+                                {% else %}
+                                    No description available.
+                                {% endif %}
+                            </p>
+                            
+                            
+                            <!-- Add to Reading List Form -->
+                            <form action="{{ url_for('books.add_book') }}" method="POST" class="mt-4">
+                                <input type="hidden" name="api_id" value="{{ book['id'] }}">
+                                <input type="hidden" name="title" value="{{ book['volumeInfo'].title }}">
+                                <input type="hidden" name="author" value="{{ ', '.join(book['volumeInfo'].authors) if book['volumeInfo'].authors else 'Unknown Author' }}">
+                                <input type="hidden" name="description" value="{{ book['volumeInfo'].description }}">
+                                <input type="hidden" name="cover_page" value="{{ book['volumeInfo'].imageLinks.thumbnail if book['volumeInfo'].imageLinks else '' }}">
+                                
+                                <!-- Dropdown for Read Status -->
+                                <label for="read_status" class="block text-sm font-medium text-dark-brown mb-2">Reading Status:</label>
+                                <select name="read_status" id="read_status" class="w-full md:w-1/3 px-4 py-2 rounded-md bg-parchment text-dark-brown border border-dark-brown mb-4 focus:outline-none focus:ring-2 focus:ring-pastel-blue-dark">
+                                    <option value="to-read">To Read</option>
+                                    <option value="reading">Reading</option>
+                                    <option value="completed">Completed</option>
+                                </select>
+                                
+                                <!-- Submit Button -->
+                                <button type="submit" class="bg-golden-yellow text-brown-800 px-6 py-2 rounded-md shadow-md hover:bg-amber transition-transform duration-300">
+                                    Add to My List
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </li>
-                <hr>
             {% endfor %}
         </ul>
     {% endif %}
-</body>
-</html>
+</main>
+{% endblock %}

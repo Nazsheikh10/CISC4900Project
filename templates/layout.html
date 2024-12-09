@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <!-- Tailwind CSS -->
+    <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="bookshelf-background bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100 flex flex-col min-h-screen">
+
+    <!-- Header -->
+    <header class="bg-antique-white dark:bg-gray-800 p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <a href="/" class="flex items-center space-x-2">
+                <span class="text-2xl font-bold text-sepia dark:text-antique-white">Lit Tracks</span>
+            </a>
+
+            <!-- Navigation Links (Desktop) -->
+            <nav class="hidden md:flex space-x-6 items-center">
+                <a href="{{ url_for('main.dashboard') if current_user.is_authenticated else url_for('main.home') }}" class="text-gray-800 dark:text-gray-100 hover:text-pastel-blue-dark dark:hover:text-pastel-blue-light transition duration-300">Home</a>
+                <a href="{{ url_for('books.my_books') }}" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">My Books</a>
+                <a href="{{ url_for('books.recommendations') }}" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">Recommendations</a>
+                <a href="{{ url_for('auth.profile') }}" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">Profile</a>
+                <button id="dark-mode-toggle" class="ml-4 toggle-dark-mode toggle-dark-mode:hover">
+                    Toggle Dark Mode
+                </button>
+            </nav>
+
+            <!-- Hamburger Menu (Mobile) -->
+            <button id="menu-button" class="md:hidden flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <nav id="menu" class="hidden md:hidden mt-4">
+            <div class="container mx-auto flex flex-col space-y-4">
+                <a href="/" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">Home</a>
+                <a href="/my-books" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">My Books</a>
+                <a href="/recommendations" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">Recommendations</a>
+                <a href="/profile" class="text-gray-800 dark:text-gray-100 hover:text-golden-yellow dark:hover:text-golden-yellow transition duration-300">Profile</a>
+                <button id="dark-mode-toggle-mobile" class="bg-golden-yellow text-brown-800 px-4 py-2 rounded-md shadow-md transition-transform duration-300">
+                    Toggle Dark Mode
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto py-8 px-4 md:px-16 space-y-8">
+        {% block content %}
+        <!-- Page specific content will go here -->
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sepia dark:bg-gray-800 border-t border-leather-brown p-6 mt-auto text-center text-gray-800 dark:text-gray-300 w-full shadow-inner">
+        <p>&copy; 2024 Lit Tracks. All rights reserved.</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.getElementById('menu-button').addEventListener('click', () => {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        });
+
+        const toggleDarkMode = () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        };
+
+        const toggle = document.getElementById('dark-mode-toggle');
+        const toggleMobile = document.getElementById('dark-mode-toggle-mobile');
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+
+        toggle.addEventListener('click', toggleDarkMode);
+        if (toggleMobile) {
+            toggleMobile.addEventListener('click', toggleDarkMode);
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000, // Animation duration in milliseconds
+            once: true // Animation happens only once - while scrolling down
+        });
+    </script>
+
+</body>
+
+</html>

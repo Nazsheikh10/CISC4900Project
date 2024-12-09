@@ -6,12 +6,13 @@ from flask import current_app
 import jwt
 
 class User(db.Model, UserMixin):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)    # User_ID
     username = db.Column(db.String(20), nullable=False, unique=True)   # username
     email = db.Column(db.String(120), nullable=False, unique=True)      # email_address
     password = db.Column(db.String(80), nullable=False)         # hashed_password
+    wants_reminder = db.Column(db.Boolean, nullable=False, default=False)
 
     def get_reset_token(self, expires_in=600):
         return jwt.encode({'reset_password': self.id,
@@ -40,7 +41,7 @@ class User_Read_Books(db.Model):
     __tablename__ = 'user_read_books'
 
     record_id = db.Column(db.Integer, primary_key=True) # Record_ID
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)   #connecting to User table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)   #connecting to User table
     book_id = db.Column(db.Integer, db.ForeignKey('books.book_id'), nullable=False) #connecting to Books table
 
     #Adding enum for reading status
@@ -56,7 +57,7 @@ class Reviews(db.Model):
     __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)  # Unique record ID
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to Users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Foreign key to Users table
     book_id = db.Column(db.Integer, db.ForeignKey('books.book_id'), nullable=False)  # Foreign key to Books table
     rating = db.Column(db.Float, nullable=False)  # Rating (1-5 stars)
     review_text = db.Column(db.Text, nullable=True)  # Brief note on the book
@@ -69,7 +70,7 @@ class Recommendations(db.Model):
     __tablename__ = 'recommendations'
 
     id = db.Column(db.Integer, primary_key=True)  # Unique record ID
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to Users table
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Foreign key to Users table
     recommend_book_id = db.Column(db.Integer, db.ForeignKey('books.book_id'), nullable=False)  # Foreign key to recommended Books
     based_on_book_id = db.Column(db.Integer, db.ForeignKey('books.book_id'), nullable=False)  # Foreign key to the basis book
     added_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))  # Timestamp when the recommendation was added
@@ -77,4 +78,3 @@ class Recommendations(db.Model):
     user = db.relationship('User', backref=db.backref('recommendations', lazy=True))  # Relationship to User
     recommended_book = db.relationship('Books', foreign_keys=[recommend_book_id], backref=db.backref('recommended_for', lazy=True))  # Relationship to recommended Books
     based_on_book = db.relationship('Books', foreign_keys=[based_on_book_id], backref=db.backref('basis_for_recommendations', lazy=True))  # Relationship to the basis book
-

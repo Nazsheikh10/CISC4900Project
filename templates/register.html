@@ -1,21 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
-    <h1>Register page</h1>
+{% extends "layout.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-10 bg-parchment-white text-brown-800 p-8 rounded-lg shadow-lg border border-leather-brown">
+    <h1 class="text-3xl font-bold mb-6 text-center text-leather-brown">Register</h1>
 
     <form method="POST" action="">
         {{ form.hidden_tag() }}
-        {{ form.username }}
-        {{ form.email }}
-        {{ form.password }}
-        {{ form.submit }}
+
+        <!-- Username Field -->
+        <div class="mb-4">
+            <label for="username" class="block text-sm font-medium text-burnt-sienna mb-2">Username:</label>
+            {{ form.username(class_="w-full bg-parchment-white border-dark-brown rounded-md p-2 focus:ring-golden-yellow focus:border-golden-yellow") }}
+        </div>
+
+        <!-- Email Field -->
+        <div class="mb-4">
+            <label for="email" class="block text-sm font-medium text-burnt-sienna mb-2">Email:</label>
+            {{ form.email(class_="w-full bg-parchment-white border-dark-brown rounded-md p-2 focus:ring-golden-yellow focus:border-golden-yellow") }}
+        </div>
+
+        <!-- Password Field -->
+        <div class="mb-4">
+            <label for="password" class="block text-sm font-medium text-burnt-sienna mb-2">Password:</label>
+            {{ form.password(class_="w-full bg-parchment-white border-dark-brown rounded-md p-2 focus:ring-golden-yellow focus:border-golden-yellow") }}
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="w-full bg-golden-yellow text-brown-800 py-2 px-4 rounded-md hover:bg-amber focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-golden-yellow shadow-md">
+                Register
+            </button>
+        </div>
     </form>
-    
-    <a href="{{url_for('auth.login')}}">Already have an account? Login</a>
-</body>
-</html>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('auth.login') }}" class="text-leather-red hover:underline">Already have an account? Login</a>
+    </div>
+</div>
+{% endblock %}

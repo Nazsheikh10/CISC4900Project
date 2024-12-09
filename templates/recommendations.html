@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+
+{% block title %}Your Recommendations{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-8 px-4 md:px-16 dark:bg-gray-900 dark:text-gray-100">
+    <!-- Page Title -->
+    <h2 class="text-3xl font-bold mb-8 text-center text-brown dark:text-antique-white">Your Recommendations</h2>
+
+    <!-- Recommendations List -->
+    {% if books %}
+        <div class="space-y-8">
+            {% for book in books %}
+                <div class="flex flex-col md:flex-row items-start p-4 border border-dark-brown rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 bg-parchment-white">
+                    <!-- Book Cover -->
+                    <div class="flex-shrink-0 w-28 h-auto md:mr-6 mb-4 md:mb-0">
+                        {% if book.cover_page %}
+                            <img src="{{ book.cover_page }}" alt="Cover" class="w-full h-auto rounded-lg shadow-sm">
+                        {% else %}
+                            <div class="w-full h-40 bg-gray-200 flex items-center justify-center rounded-lg">
+                                <span class="text-dark-brown text-center">No Cover Available</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Book Details -->
+                    <div class="flex-1">
+                        <h3 class="text-xl font-bold mb-2 text-dark-brown">{{ book.title }}</h3>
+                        <p class="text-md font-medium text-dark-brown mb-2">
+                            <strong>Author:</strong> {{ book.author if book.author else 'Unknown Author' }}
+                        </p>
+                        <p class="text-gray-800 mb-4">
+                            {{ book.description[:200] }}{% if book.description|length > 200 %}...{% endif %}
+                        </p>
+
+                        <!-- Add to My Books Form -->
+                        <form action="{{ url_for('books.add_book') }}" method="POST" class="mt-4">
+                            <input type="hidden" name="api_id" value="{{ book.api_id }}">
+                            <input type="hidden" name="title" value="{{ book.title }}">
+                            <input type="hidden" name="author" value="{{ book.author }}">
+                            <input type="hidden" name="description" value="{{ book.description }}">
+                            <input type="hidden" name="cover_page" value="{{ book.cover_page }}">
+
+                            <!-- Dropdown for Read Status -->
+                            <label for="read_status" class="block text-sm font-medium text-gray-700 mb-1">Reading Status:</label>
+                            <select name="read_status" id="read_status" class="w-full md:w-1/3 px-4 py-2 rounded bg-gray-200 text-black focus:outline-none focus:ring-2 focus:ring-blue-300 mb-4">
+                                <option value="to-read">To Read</option>
+                                <option value="reading">Reading</option>
+                                <option value="completed">Completed</option>
+                            </select>
+
+                            <!-- Add to List Button -->
+                            <button type="submit" class="w-full md:w-auto bg-golden-yellow text-brown-800 px-4 py-2 rounded-md shadow-md hover:bg-amber transition-transform duration-300">
+                                Add to My List
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-center text-dark-brown mt-16">No recommendations available at the moment.</p>
+    {% endif %}
+</main>
+{% endblock %}

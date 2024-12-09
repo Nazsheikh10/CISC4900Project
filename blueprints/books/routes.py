@@ -3,14 +3,14 @@ from flask_login import current_user, login_required
 from models import Books, User_Read_Books, Reviews
 from extensions import db
 from ..auth.forms import ReviewForm
-import requests
+import requests, os
 
 books = Blueprint('books', __name__)
 
-GOOGLE_BOOKS_API_KEY = 'AIzaSyAt0FBx4vv8cSxNIlmd3GZ7vSXZYz_Qffs'
+google_api_key = os.environ.get('GOOGLE_BOOKS_API_KEY')
 
 @books.route('/search', methods=['GET', 'POST'])
-#@login_required  
+@login_required  
 def search():
     if request.method == 'POST':
         query = request.form.get('query')  # Get the search query from the form
@@ -20,7 +20,7 @@ def search():
             params = {
                 'q': query,
                 'maxResults': 10,  # Limit the number of results
-                'key': GOOGLE_BOOKS_API_KEY
+                'key': google_api_key
             }
             response = requests.get(url, params=params)
 
@@ -29,18 +29,27 @@ def search():
                 book_data = response.json()
                 books = book_data.get('items', [])  # Extract the list of books from the API response
                 if books:
-                    return render_template('results.html', books=books)  # Pass books to the results page
+                    return render_template('results.html', books=books, query=query) # Pass books to the results page
 
             # If no results or error, pass an empty list
             return render_template('results.html', books=[])
         
-    return render_template('search.html')  # Display the search form if no POST request
+    return render_template('search.html')  # Display the search form if no POST request.   
 
-@books.route('/my_books')
+@books.route('/books.my_books')
 @login_required
 def my_books():
+    # Get the read status from the query parameter, if provided
+    read_status = request.args.get('read_status', 'all')
+
     # Retrieve all books saved by the logged-in user
-    user_books = User_Read_Books.query.filter_by(user_id=current_user.id).all()
+    query = User_Read_Books.query.filter_by(user_id=current_user.id)
+
+    # Apply additional filtering by read status, if provided
+    if read_status and read_status != 'all':
+        query = query.filter_by(read_status=read_status)
+
+    user_books = query.all()
     
     # Create a list to store book details
     books = []
@@ -90,7 +99,7 @@ def add_book():
     # Check for missing required fields
     if not api_id or not title or not author:
         flash("Missing required book information.", "error")
-        return redirect(url_for('search'))
+        return redirect(url_for('books.search'))
 
     #Get the selected read_status from the form
     read_status = request.form.get('read_status')
@@ -98,7 +107,7 @@ def add_book():
     # Validate read_status
     if not read_status or read_status not in ['to-read', 'reading', 'completed']:
         flash("Invalid or missing read status.", "error")
-        return redirect(url_for('search'))
+        return redirect(url_for('books.search'))
 
     # Check if the book already exists in the Books table
     existing_book = Books.query.filter_by(api_id=api_id).first()
@@ -111,7 +120,7 @@ def add_book():
         except Exception as e:
             db.session.rollback()  # Rollback in case of database errors
             flash(f"Error adding book: {str(e)}", "error")
-            return redirect(url_for('search'))
+            return redirect(url_for('books.search'))
     else:
         # If the book already exists, get the book_id from the existing book
         book_id = existing_book.book_id
@@ -120,7 +129,7 @@ def add_book():
     existing_user_book = User_Read_Books.query.filter_by(user_id=current_user.id, book_id=book_id).first()
     if existing_user_book:
         flash("This book is already in your list.", "info")
-        return redirect(url_for('my_books'))
+        return redirect(url_for('books.my_books'))
     
     # If not, add the book to the User_Read_Books table
     try:
@@ -132,7 +141,7 @@ def add_book():
         db.session.rollback()  # Rollback in case of database errors
         flash(f"Error adding book to your list: {str(e)}", "error")
     
-    return redirect(url_for('my_books'))  # Redirect to the user's book list after adding
+    return redirect(url_for('books.my_books'))  # Redirect to the user's book list after adding
                             
 @books.route('/update_read_status/<int:book_id>', methods=['POST'])
 @login_required
@@ -142,18 +151,18 @@ def update_read_status(book_id):
     # Validate read_status
     if new_status not in ['to-read', 'reading', 'completed']:
         flash("Invalid read status selected.", "error")
-        return redirect(url_for('my_books'))
+        return redirect(url_for('books.my_books'))
     
     user_book = User_Read_Books.query.filter_by(user_id=current_user.id, book_id=book_id).first()
 
     if not user_book:
         flash("Book not found in your list.", "error")
-        return redirect(url_for('my_books'))
+        return redirect(url_for('books.my_books'))
     
     user_book.read_status = new_status
     db.session.commit()
     flash("Read status updated successfully.", "success")
-    return redirect(url_for('my_books'))  # Redirect back to the user's book list
+    return redirect(url_for('books.my_books'))  # Redirect back to the user's book list
 
 @books.route('/remove_book/<int:book_id>', methods=['POST'])
 @login_required
@@ -162,7 +171,7 @@ def remove_book(book_id):
 
     if not user_book:
         flash("Book not found in your list.", "error")
-        return redirect(url_for('my_books'))
+        return redirect(url_for('books.my_books'))
 
     try:
         db.session.delete(user_book)
@@ -172,7 +181,7 @@ def remove_book(book_id):
         db.session.rollback()  # Rollback in case of database errors
         flash(f"Error removing book: {str(e)}", "error")
 
-    return redirect(url_for('my_books')) # Redirect back to the user's book list
+    return redirect(url_for('books.my_books')) # Redirect back to the user's book list
 
 @books.route('/<int:book_id>/review', methods=['GET', 'POST'])
 @login_required
@@ -199,7 +208,7 @@ def review_book(book_id):
         db.session.commit()
 
         flash('Your review has been submitted!', 'success')
-        return redirect(url_for('books.my_book', book_id=book_id))
+        return redirect(url_for('books.my_books', book_id=book_id))
 
     return render_template('review_book.html', form=form, book=book)
 
@@ -218,3 +227,71 @@ def delete_review(review_id):
     flash('Your review has been deleted.', 'success')
 
     return redirect(url_for('books.view_book', book_id=review.book_id))
+
+@books.route('/recommendations')
+@login_required
+def recommendations():
+    user_books = User_Read_Books.query.filter_by(user_id=current_user.id).all()
+    
+    if len(user_books) > 0:
+        similar_books = collaborative_recommendations(current_user.id)
+        
+        if not similar_books:
+            # Fallback to API recommendations
+            api_books = api_based_recommendations(user_books)
+            return render_template('recommendations.html', books=api_books)
+        
+        return render_template('recommendations.html', books=similar_books)
+    else:
+        flash("No books in your reading history for recommendations.", "info")
+        return redirect(url_for('books.my_books'))
+    
+def collaborative_recommendations(user_id):
+    # Identify books the user has read
+    user_books = User_Read_Books.query.filter_by(user_id=user_id).all()
+    user_book_ids = [book.book_id for book in user_books]
+
+    # Find other users who have read similar books
+    similar_users = User_Read_Books.query.filter(User_Read_Books.book_id.in_(user_book_ids), User_Read_Books.user_id != user_id).all()
+
+    # Create a set to store recommended books
+    recommended_books = set()
+
+    # Add books read by similar users, but not yet read by the current user
+    for entry in similar_users:
+        if entry.book_id not in user_book_ids:
+            recommended_books.add(entry.book_id)
+    
+    # Fetch book details from the Books table
+    books = Books.query.filter(Books.book_id.in_(recommended_books)).all()
+    return books
+
+def api_based_recommendations(user_books):
+    recommendations = []
+    
+    for user_book in user_books:
+        book = Books.query.get(user_book.book_id)
+        if book:
+            # Use book title and author to search for similar books in Google Books API
+            url = "https://www.googleapis.com/books/v1/volumes"
+            params = {
+                'q': f'intitle:{book.title} inauthor:{book.author}',
+                'maxResults': 5,  # Adjust as needed
+                'key': google_api_key
+            }
+            response = requests.get(url, params=params)
+
+            if response.status_code == 200:
+                book_data = response.json().get('items', [])
+                for item in book_data:
+                    recommendations.append({
+                        'id': item['id'],
+                        'title': item['volumeInfo'].get('title'),
+                        'author': ', '.join(item['volumeInfo'].get('authors', [])),
+                        'description': item['volumeInfo'].get('description', 'No description available'),
+                        'cover_page': item['volumeInfo'].get('imageLinks', {}).get('thumbnail')
+                    })
+            if len(recommendations) >= 10:  # Stop if enough recommendations are collected
+                break
+
+    return recommendations

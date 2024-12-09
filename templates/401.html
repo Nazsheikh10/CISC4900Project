@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}Unauthorized{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-20 px-4 md:px-16 text-center">
+    <!-- Unauthorized Error Section -->
+    <div class="bg-pastel-red-light p-10 rounded-lg shadow-lg">
+        <h1 class="text-5xl font-bold text-dark-brown mb-6">401 - Unauthorized</h1>
+        <p class="text-lg text-white mb-8">You are not authorized to access this page. Please check your login credentials or contact support if you think this is a mistake.</p>
+        <div class="mt-8">
+            <a href="{{ url_for('auth.login') }}" class="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-300">Login</a>
+            <a href="{{ url_for('main.home') }}" class="ml-4 bg-gray-600 text-white px-6 py-3 rounded-md hover:bg-gray-700 transition duration-300">Go to Homepage</a>
+        </div>
+    </div>
+</main>
+{% endblock %}

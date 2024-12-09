@@ -1,0 +1,17 @@
+{
+  "name": "cisc4900project",
+  "version": "1.0.0",
+  "description": "# This Project is called LitTracks # It is a website where readers can track their reads # Rate them, and find recommendations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15"
+  }
+}

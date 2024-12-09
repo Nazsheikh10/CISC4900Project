@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}Review {{ book.title }}{% endblock %}
+
+{% block content %}
+<main class="container mx-auto py-8 px-4 md:px-16">
+    <!-- Review Container -->
+    <div class="bg-antique-white dark:bg-gray-700 p-8 rounded-lg shadow-md max-w-lg mx-auto">
+        <!-- Book Title -->
+        <h2 class="text-3xl font-bold mb-6 text-center">{{ book.title }}</h2>
+
+        <!-- Book Information -->
+        <div class="flex flex-col items-center mb-12">
+            <!-- Book Cover -->
+            <img src="{{ book.cover_page }}" alt="Book Cover" class="w-48 h-auto rounded-lg shadow-md mb-4">
+            <!-- Author Name -->
+            <p class="text-md font-bold text-center">Author(s): {{ book.author }}</p>
+        </div>
+
+        <!-- Page Title -->
+        <h3 class="text-3xl font-bold mb-6 text-center">Write Your Review</h3>
+        
+        <!-- Form Section -->
+        <form action="{{ url_for('books.review_book', book_id=book.book_id) }}" method="POST">
+            <!-- Rating Dropdown -->
+            <div class="mb-6">
+                <label for="rating" class="block text-sm font-medium mb-2">Rating (1-5):</label>
+                <select id="rating" name="rating" class="border border-gray-300 rounded-md p-2 w-full">
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+            </div>
+            
+            <!-- Review Textarea -->
+            <div class="mb-6">
+                <label for="review_text" class="block text-sm font-medium mb-2">Your Review:</label>
+                <textarea id="review_text" name="review_text" rows="4" class="border border-gray-300 rounded-md p-2 w-full" required></textarea>
+            </div>
+            
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                    Submit Review
+                </button>
+            </div>
+        </form>
+        
+        <!-- Back to Book Details -->
+        <div class="text-center mt-6">
+            <a href="{{ url_for('books.view_book', book_id=book.book_id) }}" class="bg-gray-200 text-dark-brown px-4 py-2 rounded-md hover:bg-gray-300 transition duration-300">
+                Back to Book Details
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

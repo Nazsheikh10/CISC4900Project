@@ -1,16 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "layout.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-</head>
+{% block title %}Home{% endblock %}
 
-<body>
-    <h1>LitTracks</h1>
-    <a href="{{ url_for('auth.login') }}">Login page</a><br>
-    <a href="{{url_for('auth.register')}}">Register page</a><br>
-</body>
-</html>
+{% block content %}
+    <!-- Hero Section with Book-Themed Background and Quote -->
+    <section class="hero bg-burnished-gold text-antique-white vintage-texture py-20 pb-28 rounded-lg shadow-lg mb-40 transition-transform duration-300 hover:scale-105" data-aos="fade-up">        
+        <div class="container mx-auto text-center relative">
+            <h2 class="text-5xl font-bold mb-6">Welcome to Lit Tracks</h2>
+            <blockquote class="quote-text text-lg mb-10">"A reader lives a thousand lives before he dies." — George R.R. Martin</blockquote>
+            <a href="{{ url_for('auth.register') }}" class="button bg-golden-yellow text-brown-800 px-6 py-3 rounded-md shadow-md hover:bg-golden-light hover:scale-105 transition-transform duration-300">
+                Start Your Journey
+            </a>            
+        </div>
+    </section>
+
+    <!-- Spacer Section to add extra space between the Hero and Cards -->
+    <section class="my-32 h-16"></section>
+
+    <!-- Features Section with Book-Themed Icons -->
+    <section class="my-12 mt-30">
+        <div class="container mx-auto grid md:grid-cols-3 gap-6">
+            <!-- Feature 1: Track Your Reading -->
+            <div class="card paper-background text-gray-800 dark:bg-gray-700 dark:text-antique-white p-8 rounded-lg shadow-lg card-zoom transition-shadow duration-300 hover:shadow-2xl hover:-translate-y-2" data-aos="fade-up" data-aos-delay="100">
+                <div class="flex items-center mb-4">
+                    <!-- Open Book Icon -->
+                    <i class="fa-solid fa-book-open text-3xl text-leather-red-light mr-4"></i>
+                    <h3 class="text-2xl font-semibold">Track Your Reading</h3>
+                </div>
+                <p>Keep tabs on what you are reading, want to read, and have finished.</p>
+            </div>
+
+            <!-- Feature 2: Recommendations -->
+            <div class="card paper-background text-gray-800 dark:bg-gray-700 dark:text-antique-white p-8 rounded-lg shadow-lg card-zoom transition-shadow duration-300 hover:shadow-2xl hover:-translate-y-2" data-aos="fade-up" data-aos-delay="200">
+                <div class="flex items-center mb-4">
+                    <!-- Light Bulb Icon for Recommendations -->
+                    <i class="fa-solid fa-lightbulb text-3xl text-leather-red-light mr-4"></i>
+                    <h3 class="text-2xl font-semibold">Get Personalized Recommendations</h3>
+                </div>
+                <p>Receive book suggestions based on your reading habits.</p>
+            </div>
+
+            <!-- Feature 3: Write Reviews -->
+            <div class="card paper-background text-gray-800 dark:bg-gray-700 dark:text-antique-white p-8 rounded-lg shadow-lg card-zoom transition-shadow duration-300 hover:shadow-2xl hover:-translate-y-2" data-aos="fade-up" data-aos-delay="300">
+                <div class="flex items-center mb-4">
+                    <!-- Pen Icon for Reviews -->
+                    <i class="fa-solid fa-pen text-3xl text-leather-red-light mr-4"></i>
+                    <h3 class="text-2xl font-semibold">Write Reviews</h3>
+                </div>
+                <p>Share your thoughts and opinions about the books you've read.</p>
+            </div>
+        </div>
+    </section>    
+
+{% endblock %}
